@@ -1,0 +1,18 @@
+name: "is580"
+navbar:
+  title: "Knowledge, Discovery and Minnig"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Tutorials"
+      href: #
+      menu:
+      - text: "Rule Mining"
+        href: rule-mining.html
+#      - text: "Neural Networks"
+#        href: i.html
+#      - text: "Topic Modelling"
+#        href: i.html
+  right:
+    - icon: fa-question fa-lg
+      href: https://mehmetaliakyol.com/

@@ -1,0 +1,45 @@
+---
+title: "IS580 - Knowledge, Discovery and Mining"
+author: "Mehmet Ali Akyol"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Welcome to Knowledge, Discovery and Mining. This lecture will be given by [Assoc.Prof.Dr.Tugba Taskaya Temizel](https://blog.metu.edu.tr/ttemizel/). The assistant who will be doing the applied portion of the course is [Mehmet Ali Akyol](https://mehmetaliakyol.com). 
+
+This page will contain the lab codes for the class as RMarkdown documents. You can go to the [Github repository](https://github.com/METUDataScience/datamining) for the full Rmarkdown files to use in your local environment.The entirety of materials will be available through ODTUClass. This website only aims to provide a collection of rendered RMarkdown files.
+
+The syllabus for this year’s lecture is as follows:
+
+* Week 1: Introduction: Review of the Basics (Background) - Discussion about data pre-processing, basics of data analysis techniques.
+* Week 2: Data Warehousing
+* Week 3: Mining Frequent Patterns, Associations, and Correlations - Efficient and scalable frequent itemset mining methods, Mining various kinds of association rules, Interestingness measures
+* Week 4: Classification - Logistic regression, Neural Networks: ADALINE, backpropagation algorithm, radial basis functions, associative networks, recurrent networks
+* Week 5: Classification cont. - Support vector machines, Combining models: Ensembles (boosting, bagging), mixture of experts, random forest, XGBoost
+* Week 6: Clustering - Similarity and distance measures, self-organizing maps, clustering validation techniques, singular value decomposition
+* Week 7: Clustering cont. - Topic Modelling: Latent Dirichlet Allocation (LDA)
+* Week 8: Evaluation and Credibility - Error measures, creating baselines, comparison of classifiers
+* Week 9: Recommendation Systems - User-based and item-based collaborative systems, matrix factorization techniques 
+* Week 10: Anomaly Detection Algorithms
+* Week 11: Introduction to Information Retrieval and Information Extraction Techniques
+
+
+## Grading
+* Assignments (%30)
+* Midterm (%25)
+* Final (%25)
+* Final Project (%20)
+
+## External Resources
+
+* [IS790 Introduction to Data Science Materials](https://metudatascience.github.io/datascience/)
+* [Quick Introduction to Jupyter Notebooks](https://www.youtube.com/watch?v=jZ952vChhuI)
+* [Cheatsheets by RStudio](https://rstudio.com/resources/cheatsheets/)
+* [An Introduction to Statistical Learning](http://faculty.marshall.usc.edu/gareth-james/ISL/)
+* [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
+* [Introduction to R Markdown](https://rmarkdown.rstudio.com/lesson-1.html)
+* [ggplot2 Overview](https://ggplot2.tidyverse.org/)
