@@ -4,7 +4,6 @@ author: "Mehmet Ali Akyol"
 date: "2/10/2020"
 output:
   html_document: default
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}

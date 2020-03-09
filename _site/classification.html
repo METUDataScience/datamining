@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Classification</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Knowledge, Discovery and Minnig</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="rule-mining.html">Rule Mining</a>
+    </li>
+    <li>
+      <a href="classification.html">Classification</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://mehmetaliakyol.com/">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Classification</h1>
+
+</div>
+
+
+<p><strong>Objectives</strong>:</p>
+<p>The objective of this document is to go over some of the classification methods using R. After completing this tutorial you will be able to:</p>
+<ul>
+<li>Generate classification models</li>
+<li>Calculate accuracy, sensitivity and specificity values</li>
+<li>Calculate AUC</li>
+</ul>
+<p>Let’s load the data:</p>
+<pre class="r"><code>data(iris) 
+head(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<pre class="r"><code>shuffleIris &lt;- iris[sample(nrow(iris)),] #Shuffle the dataset 
+trainIris &lt;- shuffleIris[1:100,] #Subset the training set 
+testIris &lt;- shuffleIris[101:150,-5] #Subset the test set without the class column 
+testClass &lt;- shuffleIris[101:150,5] #Get test classes into a separate vector</code></pre>
+<div id="logistic-regression" class="section level2">
+<h2>Logistic Regression</h2>
+<p>Logistic regression is the type of regression where you fit a binary classification model. A binary classification model is the type of model where your output variable has 2 classes. Now this doesn?t mean that if you have a data that has more than one class (such as the iris data) cannot be modeled using a logistic regression. The idea is that you model each class vs. all others individually.</p>
+<p>Let’s load the data:</p>
+<pre class="r"><code>require(caret)
+data &lt;- read.csv(url(&quot;http://archive.ics.uci.edu/ml/machine-learning-databases/cmc/cmc.data&quot;), sep=&quot;,&quot;, header = F) 
+names(data) &lt;- c(&quot;w.age&quot;, &quot;w.ed&quot;, &quot;h.ed&quot;, &quot;child&quot;, &quot;rel&quot;,&quot;w.occ&quot;, &quot;h.occ&quot;, &quot;ind&quot;, &quot;med&quot;, &quot;outcome&quot;) 
+data$w.ed &lt;- as.factor(data$w.ed) 
+data$h.ed &lt;- as.factor(data$h.ed) 
+data$rel&lt;-as.factor(data$rel) 
+data$w.occ &lt;- as.factor(data$w.occ) 
+data$h.occ &lt;- as.factor(data$h.occ) 
+data$ind &lt;- as.factor(data$ind) 
+data$med &lt;- as.factor(data$med) 
+data$outcome &lt;- as.factor(data$outcome) 
+summary(data)</code></pre>
+<pre><code>##      w.age       w.ed    h.ed        child        rel      w.occ    h.occ  
+##  Min.   :16.00   1:152   1: 44   Min.   : 0.000   0: 220   0: 369   1:436  
+##  1st Qu.:26.00   2:334   2:178   1st Qu.: 1.000   1:1253   1:1104   2:425  
+##  Median :32.00   3:410   3:352   Median : 3.000                     3:585  
+##  Mean   :32.54   4:577   4:899   Mean   : 3.261                     4: 27  
+##  3rd Qu.:39.00                   3rd Qu.: 4.000                            
+##  Max.   :49.00                   Max.   :16.000                            
+##  ind     med      outcome
+##  1:129   0:1364   1:629  
+##  2:229   1: 109   2:333  
+##  3:431            3:511  
+##  4:684                   
+##                          
+## </code></pre>
+<p>As you can see, we have 3 classes in <code>outcome</code> variable, which means that we have to generate 3 different models to perform logistic regression on this data for each class.</p>
+<p>Let’s subset the data into training and testing sets:</p>
+<pre class="r"><code>data &lt;- data[sample(nrow(data)),] #Shuffles the data by sampling nrow(data) observations from the data without replacement 
+trainInd &lt;- round(nrow(data)*0.7) #Take 70% of data as training 
+train &lt;- data[1:trainInd,] #Subset training data 
+test.outcome &lt;- data[-(1:trainInd),10] #Separate the outcome values of test 
+test &lt;- data[-(1:trainInd),-10] #Subset test data and remove outcome variable</code></pre>
+<p>If you like, you can separate the training test further into training and validation tests to see if your model is working properly.</p>
+<p>In R, we can train logistic regression with a single line of code. <code>glm</code> function computes logistic regression using <code>family = binomial(&quot;logit&quot;)</code> parameter. This means that our output variable has a binomial distribution of <code>1s</code> and <code>0s</code>. If you want to classify more that two outcomes, you will need to use two combinatorials of those outcomes (one vs. all). This is what we will try to do.</p>
+<pre class="r"><code>iris2 &lt;-iris 
+iris2$Species&lt;-as.numeric(iris2$Species)
+#Create dataset for setosa 
+iris2.setosa &lt;-iris2 
+iris2.setosa$Species &lt;- as.factor(iris2.setosa$Species==1)
+#Create dataset for versicolor 
+iris2.versicolor &lt;-iris2 
+iris2.versicolor$Species &lt;- as.factor(iris2.versicolor$Species==2) 
+#Create dataset for virginica 
+iris2.virginica &lt;-iris2 
+iris2.virginica$Species &lt;- as.factor(iris2.virginica$Species==3)
+logit.setosa &lt;- glm(Species~., data = iris2.setosa, family = binomial)
+summary(logit.setosa)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = Species ~ ., family = binomial, data = iris2.setosa)
+## 
+## Deviance Residuals: 
+##        Min          1Q      Median          3Q         Max  
+## -3.185e-05  -2.100e-08  -2.100e-08   2.100e-08   3.173e-05  
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)     -16.946 457457.097       0        1
+## Sepal.Length     11.759 130504.042       0        1
+## Sepal.Width       7.842  59415.385       0        1
+## Petal.Length    -20.088 107724.594       0        1
+## Petal.Width     -21.608 154350.616       0        1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1.9095e+02  on 149  degrees of freedom
+## Residual deviance: 3.2940e-09  on 145  degrees of freedom
+## AIC: 10
+## 
+## Number of Fisher Scoring iterations: 25</code></pre>
+<pre class="r"><code>class1.train &lt;- train 
+class1.train$outcome &lt;- class1.train$outcome==1 #Get true for class = 1, false for otherwise 
+class1.model &lt;- glm(outcome~., data = class1.train, family = binomial(&quot;logit&quot;)) 
+summary(class1.model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ ., family = binomial(&quot;logit&quot;), data = class1.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.0551  -0.9515  -0.6729   1.0695   2.0969  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.23578    0.77298  -0.305  0.76034    
+## w.age        0.08082    0.01154   7.004 2.48e-12 ***
+## w.ed2       -0.24399    0.28926  -0.843  0.39895    
+## w.ed3       -0.78972    0.30283  -2.608  0.00911 ** 
+## w.ed4       -1.51351    0.32548  -4.650 3.32e-06 ***
+## h.ed2       -0.52420    0.52935  -0.990  0.32205    
+## h.ed3       -0.64890    0.52178  -1.244  0.21363    
+## h.ed4       -0.43389    0.52804  -0.822  0.41124    
+## child       -0.31973    0.04047  -7.900 2.80e-15 ***
+## rel1         0.39780    0.20686   1.923  0.05448 .  
+## w.occ1      -0.09934    0.16093  -0.617  0.53705    
+## h.occ2       0.21848    0.20059   1.089  0.27609    
+## h.occ3      -0.01484    0.19950  -0.074  0.94069    
+## h.occ4      -0.53652    0.52276  -1.026  0.30474    
+## ind2        -0.44112    0.29592  -1.491  0.13605    
+## ind3        -0.56276    0.28026  -2.008  0.04464 *  
+## ind4        -0.85688    0.28529  -3.004  0.00267 ** 
+## med1         0.56060    0.31077   1.804  0.07125 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1411.0  on 1030  degrees of freedom
+## Residual deviance: 1239.4  on 1013  degrees of freedom
+## AIC: 1275.4
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>There are some irrelevant features in this model, so we can use stepwise removal to retain only relevant ones. There are other methods for variable selection which we will not cover in this tutorial.</p>
+<pre class="r"><code>class1.model2 &lt;- step(class1.model, direction=&quot;backward&quot;, trace=0) 
+summary(class1.model2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ w.age + w.ed + child + rel + ind + med, 
+##     family = binomial(&quot;logit&quot;), data = class1.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.0551  -0.9431  -0.6727   1.0752   2.0743  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.75150    0.52233  -1.439  0.15022    
+## w.age        0.08143    0.01127   7.227 4.93e-13 ***
+## w.ed2       -0.27478    0.28313  -0.970  0.33181    
+## w.ed3       -0.79845    0.28555  -2.796  0.00517 ** 
+## w.ed4       -1.45675    0.29119  -5.003 5.65e-07 ***
+## child       -0.31864    0.03966  -8.035 9.38e-16 ***
+## rel1         0.34949    0.20332   1.719  0.08562 .  
+## ind2        -0.43325    0.29380  -1.475  0.14031    
+## ind3        -0.56090    0.27664  -2.027  0.04261 *  
+## ind4        -0.84865    0.27836  -3.049  0.00230 ** 
+## med1         0.56946    0.30699   1.855  0.06360 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1411.0  on 1030  degrees of freedom
+## Residual deviance: 1245.7  on 1020  degrees of freedom
+## AIC: 1267.7
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>After generating the model for outcome = 1, not we have to generate models for other outcome values.</p>
+<p>For outcome = 2:</p>
+<pre class="r"><code>class2.train &lt;- train 
+class2.train$outcome &lt;- class2.train$outcome==2 #Get true for class = 1, false for otherwise 
+class2.model &lt;- glm(outcome~., data = class2.train, family = binomial(&quot;logit&quot;)) 
+summary(class2.model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ ., family = binomial(&quot;logit&quot;), data = class2.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.7704  -0.7438  -0.4675  -0.1724   2.6611  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -3.781129   1.059046  -3.570 0.000357 ***
+## w.age        0.007132   0.013201   0.540 0.589031    
+## w.ed2        1.356762   0.561267   2.417 0.015635 *  
+## w.ed3        1.990665   0.564090   3.529 0.000417 ***
+## w.ed4        2.525930   0.577685   4.373 1.23e-05 ***
+## h.ed2       -1.375064   0.663976  -2.071 0.038363 *  
+## h.ed3       -1.375020   0.620485  -2.216 0.026689 *  
+## h.ed4       -1.051219   0.618989  -1.698 0.089454 .  
+## child        0.182511   0.044600   4.092 4.27e-05 ***
+## rel1        -0.448622   0.212966  -2.107 0.035157 *  
+## w.occ1       0.111837   0.192588   0.581 0.561437    
+## h.occ2      -0.602908   0.221588  -2.721 0.006511 ** 
+## h.occ3      -0.552500   0.218719  -2.526 0.011535 *  
+## h.occ4       0.179706   0.637224   0.282 0.777933    
+## ind2         1.207467   0.654568   1.845 0.065084 .  
+## ind3         1.465563   0.630633   2.324 0.020128 *  
+## ind4         1.578151   0.631523   2.499 0.012456 *  
+## med1         0.028944   0.476358   0.061 0.951550    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1096.97  on 1030  degrees of freedom
+## Residual deviance:  934.34  on 1013  degrees of freedom
+## AIC: 970.34
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<pre class="r"><code>class2.model2 &lt;- step(class2.model, direction=&quot;backward&quot;, trace=0) 
+summary(class2.model2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ w.ed + child + rel + h.occ + ind, family = binomial(&quot;logit&quot;), 
+##     data = class2.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.9015  -0.7410  -0.4762  -0.1956   2.5629  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -4.36621    0.81728  -5.342 9.17e-08 ***
+## w.ed2        1.12604    0.51622   2.181 0.029162 *  
+## w.ed3        1.78134    0.50103   3.555 0.000377 ***
+## w.ed4        2.40688    0.50655   4.752 2.02e-06 ***
+## child        0.19245    0.03612   5.328 9.91e-08 ***
+## rel1        -0.47453    0.20826  -2.279 0.022695 *  
+## h.occ2      -0.66848    0.21537  -3.104 0.001910 ** 
+## h.occ3      -0.61601    0.21074  -2.923 0.003466 ** 
+## h.occ4       0.23152    0.62902   0.368 0.712819    
+## ind2         1.17081    0.64817   1.806 0.070865 .  
+## ind3         1.42906    0.61790   2.313 0.020736 *  
+## ind4         1.56080    0.61586   2.534 0.011265 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1096.97  on 1030  degrees of freedom
+## Residual deviance:  940.77  on 1019  degrees of freedom
+## AIC: 964.77
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<p>For outcome = 3:</p>
+<pre class="r"><code>class3.train &lt;- train 
+class3.train$outcome &lt;- class3.train$outcome==3 #Get true for class = 1, false for otherwise 
+class3.model &lt;- glm(outcome~., data = class3.train, family = binomial(&quot;logit&quot;)) 
+summary(class3.model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ ., family = binomial(&quot;logit&quot;), data = class3.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.6979  -0.9345  -0.6435   1.1701   2.3248  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.36729    0.96674  -0.380  0.70400    
+## w.age       -0.09908    0.01284  -7.717 1.20e-14 ***
+## w.ed2       -0.31745    0.30182  -1.052  0.29289    
+## w.ed3       -0.09380    0.31322  -0.299  0.76459    
+## w.ed4        0.20353    0.33372   0.610  0.54195    
+## h.ed2        1.72046    0.78464   2.193  0.02833 *  
+## h.ed3        1.90844    0.77843   2.452  0.01422 *  
+## h.ed4        1.56285    0.78296   1.996  0.04592 *  
+## child        0.22484    0.04029   5.581 2.39e-08 ***
+## rel1        -0.07559    0.21132  -0.358  0.72059    
+## w.occ1      -0.01598    0.16613  -0.096  0.92337    
+## h.occ2       0.38564    0.20604   1.872  0.06125 .  
+## h.occ3       0.55458    0.20196   2.746  0.00603 ** 
+## h.occ4       0.62876    0.53008   1.186  0.23556    
+## ind2         0.17707    0.30087   0.589  0.55619    
+## ind3         0.19088    0.28316   0.674  0.50024    
+## ind4         0.35548    0.28693   1.239  0.21538    
+## med1        -0.58289    0.33648  -1.732  0.08321 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1325.1  on 1030  degrees of freedom
+## Residual deviance: 1207.8  on 1013  degrees of freedom
+## AIC: 1243.8
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="r"><code>class3.model2 &lt;- step(class3.model, direction=&quot;backward&quot;, trace=0) 
+summary(class3.model2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ w.age + w.ed + h.ed + child + h.occ + 
+##     med, family = binomial(&quot;logit&quot;), data = class3.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.6925  -0.9332  -0.6438   1.1689   2.3264  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.35904    0.88083  -0.408  0.68355    
+## w.age       -0.09511    0.01231  -7.727 1.10e-14 ***
+## w.ed2       -0.30670    0.29960  -1.024  0.30598    
+## w.ed3       -0.07672    0.31069  -0.247  0.80496    
+## w.ed4        0.25801    0.32788   0.787  0.43134    
+## h.ed2        1.72281    0.78313   2.200  0.02781 *  
+## h.ed3        1.94327    0.77702   2.501  0.01239 *  
+## h.ed4        1.62384    0.77996   2.082  0.03735 *  
+## child        0.21968    0.03916   5.610 2.02e-08 ***
+## h.occ2       0.37640    0.20288   1.855  0.06355 .  
+## h.occ3       0.52132    0.19847   2.627  0.00862 ** 
+## h.occ4       0.64568    0.52980   1.219  0.22295    
+## med1        -0.63414    0.33132  -1.914  0.05562 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1325.1  on 1030  degrees of freedom
+## Residual deviance: 1210.1  on 1018  degrees of freedom
+## AIC: 1236.1
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>In these models, p-values show the significance level of the variables. The residual deviance and null deviance show the variability of the residuals and the model predictions respectively. We want them to be as small as possible. Coefficients explain the effect of that variable on the outcome.</p>
+<p>Now that we have generated our models, we can perform classification with the test set we have set aside:</p>
+<pre class="r"><code>class1.test &lt;- predict(class1.model2, test, type = &quot;response&quot;) #Predicts probability of belonging to that class 
+class2.test &lt;- predict(class2.model2, test, type = &quot;response&quot;) 
+class3.test &lt;- predict(class3.model2, test, type = &quot;response&quot;) 
+classProbs &lt;- cbind(class1.test, class2.test, class3.test) 
+classProbs &lt;- classProbs/rowSums(classProbs) 
+tclassProbs &lt;- data.frame(t(classProbs)) 
+classes &lt;- as.factor(sapply(tclassProbs, which.max)) 
+confusionMatrix(classes, test.outcome)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   1   2   3
+##          1 124  30  69
+##          2  16  40  35
+##          3  42  32  54
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.4932          
+##                  95% CI : (0.4457, 0.5409)
+##     No Information Rate : 0.4118          
+##     P-Value [Acc &gt; NIR] : 0.0003275       
+##                                           
+##                   Kappa : 0.2097          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.0119289       
+## 
+## Statistics by Class:
+## 
+##                      Class: 1 Class: 2 Class: 3
+## Sensitivity            0.6813   0.3922   0.3418
+## Specificity            0.6192   0.8500   0.7394
+## Pos Pred Value         0.5561   0.4396   0.4219
+## Neg Pred Value         0.7352   0.8234   0.6688
+## Prevalence             0.4118   0.2308   0.3575
+## Detection Rate         0.2805   0.0905   0.1222
+## Detection Prevalence   0.5045   0.2059   0.2896
+## Balanced Accuracy      0.6503   0.6211   0.5406</code></pre>
+<p>This model obviously does not perform well. It can only predict the true class 50% of the time, which is better than chance level in this case because prediction true class out of 3 possible values has a chance value of 33% but still, 50% is not good. This process is also very difficult to do when working with more than 3 classes. With 4 classes, you need to generate 6 models. With 5 classes, you need to generate 10 models and with 10 classes you need to generate 45 models for classification. There are packages that do this for you but they are won’t be covered in this tutorial.</p>
+<p>To evaluate a single logistic regression model, we can use the following code to get the p-value associated with it. Assume we want to test if class3.model2 is a viable model:</p>
+<pre class="r"><code>with(class3.model2, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))</code></pre>
+<pre><code>## [1] 6.239944e-19</code></pre>
+<p>The p-value is &lt;&lt;0.05, so the model is appropriate for use.</p>
+<p>Suppose we want to see the probability and the confidence interval of beloging to that class by a random variable in the dataset for <code>class3.model2</code>, first we need to get the probabilities of that class along with the standard error of the prediction, then we plot it with the desired variable:</p>
+<pre class="r"><code>newdata &lt;- cbind(test, predict(class3.model2, newdata = test, type = &quot;link&quot;,se = TRUE)) 
+newdata &lt;- within(newdata, { 
+  PredictedProb &lt;- plogis(fit) 
+  LL &lt;- plogis(fit - (1.96 * se.fit)) 
+  UL &lt;- plogis(fit + (1.96 * se.fit)) 
+})</code></pre>
+<p>Suppose we want to see how the probabilities change by <code>w.age</code>, the following code visualizes that relationship:</p>
+<pre class="r"><code>ggplot(newdata, aes(x = w.age, y = PredictedProb)) + geom_ribbon(aes(ymin = LL,
+                                                                     ymax = UL), alpha = 0.2) + geom_line(size = 1)</code></pre>
+<p><img src="classification_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="support-vector-machines-svms" class="section level2">
+<h2>Support Vector Machines (SVMs)</h2>
+<p>SVMs can be used both for classification and regression. Luckily enough, you don’t have to explicitly perform one vs. all classification with SVMs. Even though SVMs perform one vs. all classification, they do this internally and we can simply use the <code>svm</code> function in <code>e1071</code> package. Let’s use the <code>iris</code> data set:</p>
+<pre class="r"><code>require(e1071)
+svm.model &lt;- svm(Species~., data = trainIris) 
+summary(svm.model)</code></pre>
+<pre><code>## 
+## Call:
+## svm(formula = Species ~ ., data = trainIris)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  radial 
+##        cost:  1 
+## 
+## Number of Support Vectors:  44
+## 
+##  ( 18 17 9 )
+## 
+## 
+## Number of Classes:  3 
+## 
+## Levels: 
+##  setosa versicolor virginica</code></pre>
+<pre class="r"><code>svm.preds &lt;- predict(svm.model, testIris) 
+confusionMatrix(svm.preds, testClass)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##             Reference
+## Prediction   setosa versicolor virginica
+##   setosa         18          0         0
+##   versicolor      0         17         1
+##   virginica       0          0        14
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.98            
+##                  95% CI : (0.8935, 0.9995)
+##     No Information Rate : 0.36            
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9699          
+##                                           
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: setosa Class: versicolor Class: virginica
+## Sensitivity                   1.00            1.0000           0.9333
+## Specificity                   1.00            0.9697           1.0000
+## Pos Pred Value                1.00            0.9444           1.0000
+## Neg Pred Value                1.00            1.0000           0.9722
+## Prevalence                    0.36            0.3400           0.3000
+## Detection Rate                0.36            0.3400           0.2800
+## Detection Prevalence          0.36            0.3600           0.2800
+## Balanced Accuracy             1.00            0.9848           0.9667</code></pre>
+<p>SVM performed well on <code>iris</code> dataset with the accuracy of 94%.</p>
+</div>
+<div id="artificial-neural-networks-anns" class="section level2">
+<h2>Artificial Neural Networks (ANNs)</h2>
+<p>ANNs can also be used for both regression and classification.</p>
+<pre class="r"><code>require(nnet)
+nnet.model &lt;- nnet(outcome~., data = train, size = 25) #size defines hidden layer size</code></pre>
+<pre><code>## # weights:  528
+## initial  value 1883.410713 
+## iter  10 value 1082.636851
+## iter  20 value 1035.731029
+## iter  30 value 988.232710
+## iter  40 value 936.469677
+## iter  50 value 881.964823
+## iter  60 value 866.390150
+## iter  70 value 851.882029
+## iter  80 value 826.330405
+## iter  90 value 808.259194
+## iter 100 value 798.767824
+## final  value 798.767824 
+## stopped after 100 iterations</code></pre>
+<pre class="r"><code>print(nnet.model)</code></pre>
+<pre><code>## a 17-25-3 network with 528 weights
+## inputs: w.age w.ed2 w.ed3 w.ed4 h.ed2 h.ed3 h.ed4 child rel1 w.occ1 h.occ2 h.occ3 h.occ4 ind2 ind3 ind4 med1 
+## output(s): outcome 
+## options were - softmax modelling</code></pre>
+<pre class="r"><code>nnet.preds &lt;- predict(nnet.model, test) #Returns class probabilities, so we should perform some data cleaning as we did in the logistic regression
+nnet.preds &lt;- nnet.preds/rowSums(nnet.preds) 
+tnnet.preds &lt;- data.frame(t(nnet.preds)) 
+classes &lt;- as.factor(sapply(tnnet.preds, which.max)) 
+levels(classes) &lt;- c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;) 
+confusionMatrix(classes, test.outcome)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   1   2   3
+##          1 106  23  39
+##          2  18  44  35
+##          3  58  35  84
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.5294          
+##                  95% CI : (0.4817, 0.5767)
+##     No Information Rate : 0.4118          
+##     P-Value [Acc &gt; NIR] : 4.05e-07        
+##                                           
+##                   Kappa : 0.2757          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.2278          
+## 
+## Statistics by Class:
+## 
+##                      Class: 1 Class: 2 Class: 3
+## Sensitivity            0.5824  0.43137   0.5316
+## Specificity            0.7615  0.84412   0.6725
+## Pos Pred Value         0.6310  0.45361   0.4746
+## Neg Pred Value         0.7226  0.83188   0.7208
+## Prevalence             0.4118  0.23077   0.3575
+## Detection Rate         0.2398  0.09955   0.1900
+## Detection Prevalence   0.3801  0.21946   0.4005
+## Balanced Accuracy      0.6720  0.63775   0.6021</code></pre>
+<p>Neural Network performed on par with the logistic regression. However, neural network is very sensitive to hidden layer size. It is advised to use different sizes of hidden layers when generating neural network models.</p>
+<p>Please refer to the additional resources at the end to discover more about different neural net models such as Adaline and RNN.</p>
+</div>
+<div id="evaluation-measures" class="section level2">
+<h2>Evaluation Measures</h2>
+<p>There are several evaluation measures reported in the outputs of the models generated above. Three most important values are ?<em>Sensitivity</em>?, ?<em>Specificity</em>? and ?<em>Accuracy</em>?. Accuracy gives you which percent of the data you correctly classified. However this is not a good measure if there is a class unbalance. For instance, let?s say that you have 100 data points of which 95 are <code>class a</code> and 5 are <code>class b</code>. You can classify all 100 points as <code>class a</code> and you will still have 95% accuracy, even though you failed to find any data that belongs to <code>class b</code>. This is why we need sensitivity and specificity. Sensitivity tells us how many of the data that are of <code>class a</code>, we were able to classify as <code>class a</code>. In this example, this would be 1. Because every data that belonged to <code>class a</code> was classified as <code>class a</code>. Specificity tells us how many data points that were <code>class b</code> were classified as <code>class b</code>. In this example, specificity will be zero because none of the data that were <code>class b</code> was classified as such. Ideally, we want both of these values to be close to one. If all your values are close to one, then you have a good model.</p>
+<div id="receiver-operating-characteristic-roc-curve-and-area-under-curve-auc" class="section level3">
+<h3>Receiver Operating Characteristic (ROC) Curve and Area Under Curve (AUC)</h3>
+<p>In a Receiver Operating Characteristic (ROC) curve the true positive rate (Sensitivity) is plotted in function of the false positive rate (100-Specificity) for different cut-off points. Each point on the ROC curve represents a sensitivity/specificity pair corresponding to a particular decision threshold. A test with perfect discrimination (no overlap in the two distributions) has a ROC curve that passes through the upper left corner (100% sensitivity, 100% specificity). Therefore the closer the ROC curve is to the upper left corner, the higher the overall accuracy of the test.</p>
+<p>Let’s plot ROC curve of the <code>class3.model2</code> that we fit with logistic regression:</p>
+<pre class="r"><code>#install.packages(pROC)
+class3probs&lt;-predict(class3.model2,type=&quot;response&quot;)
+require(pROC)
+roccurve &lt;- roc(class3.model2$y, class3probs)
+plot(roccurve)</code></pre>
+<p><img src="classification_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>auc(roccurve)</code></pre>
+<pre><code>## Area under the curve: 0.6956</code></pre>
+<p>We want that curve to be far away from straight line. Ideally we want the area under the curve as high as possible. We want to make almost 0% mistakes while identifying all the positives, which means we want to see AUC value near to 1.</p>
+<p>As can be seen, the AUC for logistic regression model of class 3 is 0.66. It is a fairly good model but it can be enhanced.</p>
+</div>
+</div>
+<div id="useful-links" class="section level2">
+<h2>Useful Links</h2>
+<ul>
+<li>Caret package documentation: <a href="http://www.jstatsoft.org/v28/i05/paper" class="uri">http://www.jstatsoft.org/v28/i05/paper</a>
+<ul>
+<li>This webpage holds examples and advanced methods for generating both classification and regression models using <code>caret</code> package.</li>
+</ul></li>
+<li>Accurately determining prediction error: <a href="http://scott.fortmann-roe.com/docs/MeasuringError.html" class="uri">http://scott.fortmann-roe.com/docs/MeasuringError.html</a>
+<ul>
+<li>This document explains the details of error measurements</li>
+</ul></li>
+<li>Multinomial logit model website: <a href="http://cran.r-project.org/web/packages/mlogit/vignettes/mlogit.pdf" class="uri">http://cran.r-project.org/web/packages/mlogit/vignettes/mlogit.pdf</a>
+<ul>
+<li>This website contains examples and usage details of the <code>mlogit</code> package</li>
+</ul></li>
+<li>Adaline implementation example in R: <a href="https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/2961012104553482/2761297084239426/1806228006848429/latest.html" class="uri">https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/2961012104553482/2761297084239426/1806228006848429/latest.html</a></li>
+<li>Intro to RNNs in R: <a href="https://www.kaggle.com/rtatman/beginner-s-intro-to-rnn-s-in-r" class="uri">https://www.kaggle.com/rtatman/beginner-s-intro-to-rnn-s-in-r</a></li>
+<li>Beginners Tutorial on XGBoost and Parameter Tuning in R: <a href="https://www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/" class="uri">https://www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

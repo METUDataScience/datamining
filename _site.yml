@@ -9,6 +9,8 @@ navbar:
       menu:
       - text: "Rule Mining"
         href: rule-mining.html
+      - text: "Classification"
+        href: classification.html
 #      - text: "Neural Networks"
 #        href: i.html
 #      - text: "Topic Modelling"
