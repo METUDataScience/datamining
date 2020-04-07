@@ -39,7 +39,7 @@ the_fir_tree <- hcandersen_en %>%
 head(the_fir_tree, 10)
 ```
 
-Even though, tokenization can be achieved in many ways such as using regular expressions, we don't need to re-invent the wheel and use a package called `tokenizers`. Below code block tokenize the first 5 rows of text in the tale into words.
+Even though tokenization can be achieved in many ways, such as using regular expressions, we don't need to re-invent the wheel and use a package called `tokenizers`. Below code block tokenize the first 5 rows of text in the tale into words.
 
 ```{r}
 tokenize_words(the_fir_tree[1:3])
@@ -73,7 +73,7 @@ nrow(tale_word_list)
 
 One of the stop words lists provided by `stopwords`package is the `snowball` list, configured via setting the `source` argument. Using that list we can easily remove the stop words via `dplyr`'s `filter` operation. 
 
-As you can see we ended up with 577 words without the stop words.
+As you can see, we ended up with 577 words without the stop words.
 
 ```{r}
 nosw_tale_word_list = tale_word_list %>%
@@ -117,7 +117,7 @@ head(unipostags)
 
 ## Word Cloud
 
-You can also visualize importance/frequency of the words via word clouds. Using the `wordcloud` package we depicted the most used words from the tale of `What one can invent`.
+You can also visualize the importance/frequency of the words via word clouds. Using the `wordcloud` package we depicted the most used words from the tale of `What one can invent`.
 
 ```{r}
 set.seed(1234)
@@ -129,28 +129,28 @@ wordcloud(words = stem_counts$stem, freq = stem_counts$n, min.freq = 3,
 
 ## Latent Dirichlet Allocation
 
-Latent Dirichlet Allocation (LDA) is one of the most powerful topic modelling algorithms invented back in 2003. It treats each document as a mixture of topics and each topics as a mixture of words. Using the `topicmodels` package, we demontrate an example of LDA on built in `AssociatePress` dataset, which also comes with the same package.
+Latent Dirichlet Allocation (LDA) is one of the most powerful topic modeling algorithms invented back in 2003. It treats each document as a mixture of topics and each topic as a mixture of words. Using the `topicmodels` package, we demonstrate an example of LDA on built in `AssociatePress` dataset, which also comes with the same package.
 
-In the below code, based on the `AssociatedPress` data we run the LDA algorithm considering 3 topics. One of the crucial things to consider when applying LDA is to decide on the number of topics. For the sake of example, we set it to 3.
+In the below code, based on the `AssociatedPress` data, we run the LDA algorithm considering 3 topics. One of the crucial things to consider when applying LDA is to decide on the number of topics. For the sake of example, we set it to 3.
 
 ```{r}
 set.seed(1234)
 data(AssociatedPress)
-ap_lda <- LDA(AssociatedPress, k = 3)
+ap_lda = LDA(AssociatedPress, k = 3)
 ap_lda
 ```
 
-Below code block presents the per-topics probabilities (beta-β) of each word along with the associated topics number.
+Below code block presents the per-topics probabilities (beta-β) of each word along with the associated topic number.
 
 ```{r}
-ap_topics <- tidy(ap_lda, matrix = "beta")
+ap_topics = tidy(ap_lda, matrix = "beta")
 ap_topics
 ```
 
 Lastly, using the `ggplot2` package we plot the top 10 most used words per topic.
 
 ```{r}
-ap_top_terms <- ap_topics %>%
+ap_top_terms = ap_topics %>%
   group_by(topic) %>%
   top_n(10, beta) %>%
   ungroup() %>%
