@@ -1,0 +1,180 @@
+---
+title: "Introduction to Text Mining"
+author: "Mehmet Ali Akyol"
+date: "02.04.2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The objective of this document is to give a brief introduction to text mining and some related concepts such as part of speech tagging, tokenization, and stemming.
+
+## Install required packages
+```{r}
+if(!require(hcandersenr)) {install.packages("hcandersenr")} # Fairy tales and stories of H.C. Andersen
+if(!require(tidytext)) {install.packages("tidytext")}
+if(!require(dplyr)) {install.packages("dplyr")}
+if(!require(ggplot2)) {install.packages("ggplot2")}
+if(!require(tokenizers)) {install.packages("tokenizers")}
+if(!require(SnowballC)) {install.packages("SnowballC")}
+if(!require(stopwords)) {install.packages("stopwords")}
+if(!require(wordcloud)) {install.packages("wordcloud")} # word-cloud generator 
+if(!require(RDRPOSTagger)) {remotes::install_github("bnosac/RDRPOSTagger")} 
+if(!require(topicmodels)) {install.packages("topicmodels")}
+```
+
+## Tokenization
+
+It is a process of splitting a text into tokens. Tokens could be sentences, characters or words. For this tutorial, we are going to look at word and character tokenization.
+
+In the code block below, using the `hcandersenr` package, we first pull the tale of `The fir tree`.
+
+```{r}
+the_fir_tree <- hcandersen_en %>%
+  filter(book == "The fir tree") %>%
+  pull(text)
+
+head(the_fir_tree, 10)
+```
+
+Even though, tokenization can be achieved in many ways such as using regular expressions, we don't need to re-invent the wheel and use a package called `tokenizers`. Below code block tokenize the first 5 rows of text in the tale into words.
+
+```{r}
+tokenize_words(the_fir_tree[1:3])
+```
+
+You can also tokenize into characters as well.
+
+```{r}
+tokenize_characters(the_fir_tree[1:3])
+```
+
+
+## Removing Stop Words
+
+Another important process in text mining/text analysis is to getting rid of stop words, which are usually does not carry much information into your analysis. `stopwords` package provides various lists of stop words. 
+
+In the below code block, we again pull a story and then using `unnest_token` function get the unique words from the text. As you can see that there are 1287 unique words.
+
+```{r}
+tale <- hca_fairytales() %>%
+  filter(
+    book == "What one can invent",
+    language == "English"
+  )
+
+tale_word_list <- tale %>%
+  unnest_tokens(word, text)
+
+nrow(tale_word_list)
+```
+
+One of the stop words lists provided by `stopwords`package is the `snowball` list, configured via setting the `source` argument. Using that list we can easily remove the stop words via `dplyr`'s `filter` operation. 
+
+As you can see we ended up with 577 words without the stop words.
+
+```{r}
+nosw_tale_word_list = tale_word_list %>%
+  filter(!(tale_word_list$word %in% stopwords(source = "snowball")))
+nrow(nosw_tale_word_list)
+nosw_tale_word_list
+```
+
+
+## Stemming
+
+The idea of stemming is to acquire the base word (stem) instead of dealing with different versions of the same word. Using a package called `SnowballC` that implements one of the widely used stemming algorithms, you can easily do stemming.
+
+In the below code, we apply stemming thanks the `wordStem` function that comes from the `SnowballC` package. 
+
+```{r}
+stem_counts = nosw_tale_word_list %>%
+  mutate(stem = wordStem(word)) %>%
+  count(stem, sort = TRUE)
+stem_counts
+```
+
+
+## Part of Speech Tagging
+
+Part of Speech (POS) tagging is the process of categorizing the words into their grammatical properties such noun, verb, article, adjective, preposition, pronoun, adverb, conjunction, and interjection.
+
+One of the R packages that you can use for POS tagging is `RDRPOSTagger` that that supports 45 languages including but not limited to English, German, French, Italian, and Turkish.
+
+In the below code, we apply POS tagging on the words of a sample text about Rubik's cube. 
+
+```{r}
+text <- "Rubik's Cube is a 3-D combination puzzle invented in 1974 by Hungarian sculptor and professor of architecture Ernő Rubik. Originally called the Magic Cube, the puzzle was licensed by Rubik to be sold by Ideal Toy Corp. in 1980 via businessman Tibor Laczi and Seven Towns founder Tom Kremer, and won the German Game of the Year special award for Best Puzzle that year. As of January 2009, 350 million cubes had been sold worldwide making it the world's top-selling puzzle game. It is widely considered to be the world's best-selling toy."
+
+sentences <- tokenize_sentences(text, simplify = TRUE)
+unipostagger <- rdr_model(language = "English", annotation = "UniversalPOS")
+unipostags <- rdr_pos(unipostagger, sentences)
+head(unipostags)
+```
+
+
+## Word Cloud
+
+You can also visualize importance/frequency of the words via word clouds. Using the `wordcloud` package we depicted the most used words from the tale of `What one can invent`.
+
+```{r}
+set.seed(1234)
+wordcloud(words = stem_counts$stem, freq = stem_counts$n, min.freq = 3,
+          max.words=200, random.order=FALSE, rot.per=0.25, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+
+## Latent Dirichlet Allocation
+
+Latent Dirichlet Allocation (LDA) is one of the most powerful topic modelling algorithms invented back in 2003. It treats each document as a mixture of topics and each topics as a mixture of words. Using the `topicmodels` package, we demontrate an example of LDA on built in `AssociatePress` dataset, which also comes with the same package.
+
+In the below code, based on the `AssociatedPress` data we run the LDA algorithm considering 3 topics. One of the crucial things to consider when applying LDA is to decide on the number of topics. For the sake of example, we set it to 3.
+
+```{r}
+set.seed(1234)
+data(AssociatedPress)
+ap_lda <- LDA(AssociatedPress, k = 3)
+ap_lda
+```
+
+Below code block presents the per-topics probabilities (beta-β) of each word along with the associated topics number.
+
+```{r}
+ap_topics <- tidy(ap_lda, matrix = "beta")
+ap_topics
+```
+
+Lastly, using the `ggplot2` package we plot the top 10 most used words per topic.
+
+```{r}
+ap_top_terms <- ap_topics %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+
+ap_top_terms %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(term, beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip() +
+  scale_x_reordered()
+```
+
+
+
+### Resources
+- Supervised Machine Learning for Text Analysis in R: https://smltar.com/
+- Text Analysis in R: https://m-clark.github.io/text-analysis-with-R/
+- Part of Speech tagging with R: https://smart-statistics.com/part-speech-tagging-r/
+- Text mining and word cloud fundamentals: http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+- R and OpenNLP for Natural Language Processing NLP
+  * Part 1: https://www.youtube.com/watch?v=RggCAXBe6BA
+  * Part 2: https://www.youtube.com/watch?v=0lpQludiI-0
+- Beginner’s Guide to LDA Topic Modelling with R: https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25
+- Topic modelling: https://www.tidytextmining.com/topicmodeling.html
+

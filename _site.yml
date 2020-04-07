@@ -11,8 +11,8 @@ navbar:
         href: rule-mining.html
       - text: "Classification"
         href: classification.html
-#      - text: "Neural Networks"
-#        href: i.html
+      - text: "Text Mining"
+        href: text-mining.html
 #      - text: "Topic Modelling"
 #        href: i.html
   right:
