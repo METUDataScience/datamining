@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Mehmet Ali Akyol" />
+
+
+<title>Introduction to Text Mining</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Knowledge, Discovery and Minnig</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="rule-mining.html">Rule Mining</a>
+    </li>
+    <li>
+      <a href="classification.html">Classification</a>
+    </li>
+    <li>
+      <a href="text-mining.html">Text Mining</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://mehmetaliakyol.com/">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction to Text Mining</h1>
+<h4 class="author">Mehmet Ali Akyol</h4>
+<h4 class="date">02.04.2020</h4>
+
+</div>
+
+
+<p>The objective of this document is to give a brief introduction to text mining and some related concepts such as part of speech tagging, tokenization, and stemming.</p>
+<div id="install-required-packages" class="section level2">
+<h2>Install required packages</h2>
+<pre class="r"><code>if(!require(hcandersenr)) {install.packages(&quot;hcandersenr&quot;)} # Fairy tales and stories of H.C. Andersen</code></pre>
+<pre><code>## Loading required package: hcandersenr</code></pre>
+<pre class="r"><code>if(!require(tidytext)) {install.packages(&quot;tidytext&quot;)}</code></pre>
+<pre><code>## Loading required package: tidytext</code></pre>
+<pre class="r"><code>if(!require(dplyr)) {install.packages(&quot;dplyr&quot;)}</code></pre>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>if(!require(ggplot2)) {install.packages(&quot;ggplot2&quot;)}</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>if(!require(tokenizers)) {install.packages(&quot;tokenizers&quot;)}</code></pre>
+<pre><code>## Loading required package: tokenizers</code></pre>
+<pre class="r"><code>if(!require(SnowballC)) {install.packages(&quot;SnowballC&quot;)}</code></pre>
+<pre><code>## Loading required package: SnowballC</code></pre>
+<pre class="r"><code>if(!require(stopwords)) {install.packages(&quot;stopwords&quot;)}</code></pre>
+<pre><code>## Loading required package: stopwords</code></pre>
+<pre class="r"><code>if(!require(wordcloud)) {install.packages(&quot;wordcloud&quot;)} # word-cloud generator </code></pre>
+<pre><code>## Loading required package: wordcloud</code></pre>
+<pre><code>## Loading required package: RColorBrewer</code></pre>
+<pre class="r"><code>if(!require(RDRPOSTagger)) {remotes::install_github(&quot;bnosac/RDRPOSTagger&quot;)} </code></pre>
+<pre><code>## Loading required package: RDRPOSTagger</code></pre>
+<pre><code>## Loading required package: rJava</code></pre>
+<pre class="r"><code>if(!require(topicmodels)) {install.packages(&quot;topicmodels&quot;)}</code></pre>
+<pre><code>## Loading required package: topicmodels</code></pre>
+</div>
+<div id="tokenization" class="section level2">
+<h2>Tokenization</h2>
+<p>It is a process of splitting a text into tokens. Tokens could be sentences, characters or words. For this tutorial, we are going to look at word and character tokenization.</p>
+<p>In the code block below, using the <code>hcandersenr</code> package, we first pull the tale of <code>The fir tree</code>.</p>
+<pre class="r"><code>the_fir_tree &lt;- hcandersen_en %&gt;%
+  filter(book == &quot;The fir tree&quot;) %&gt;%
+  pull(text)
+
+head(the_fir_tree, 10)</code></pre>
+<pre><code>##  [1] &quot;Far down in the forest, where the warm sun and the fresh air made a sweet&quot;      
+##  [2] &quot;resting-place, grew a pretty little fir-tree; and yet it was not happy, it&quot;     
+##  [3] &quot;wished so much to be tall like its companions– the pines and firs which grew&quot;   
+##  [4] &quot;around it. The sun shone, and the soft air fluttered its leaves, and the&quot;       
+##  [5] &quot;little peasant children passed by, prattling merrily, but the fir-tree heeded&quot;  
+##  [6] &quot;them not. Sometimes the children would bring a large basket of raspberries or&quot;  
+##  [7] &quot;strawberries, wreathed on a straw, and seat themselves near the fir-tree, and&quot;  
+##  [8] &quot;say, \&quot;Is it not a pretty little tree?\&quot; which made it feel more unhappy than&quot;  
+##  [9] &quot;before.&quot;                                                                        
+## [10] &quot;And yet all this while the tree grew a notch or joint taller every year; for by&quot;</code></pre>
+<p>Even though, tokenization can be achieved in many ways such as using regular expressions, we don’t need to re-invent the wheel and use a package called <code>tokenizers</code>. Below code block tokenize the first 5 rows of text in the tale into words.</p>
+<pre class="r"><code>tokenize_words(the_fir_tree[1:3])</code></pre>
+<pre><code>## [[1]]
+##  [1] &quot;far&quot;    &quot;down&quot;   &quot;in&quot;     &quot;the&quot;    &quot;forest&quot; &quot;where&quot;  &quot;the&quot;    &quot;warm&quot;  
+##  [9] &quot;sun&quot;    &quot;and&quot;    &quot;the&quot;    &quot;fresh&quot;  &quot;air&quot;    &quot;made&quot;   &quot;a&quot;      &quot;sweet&quot; 
+## 
+## [[2]]
+##  [1] &quot;resting&quot; &quot;place&quot;   &quot;grew&quot;    &quot;a&quot;       &quot;pretty&quot;  &quot;little&quot;  &quot;fir&quot;    
+##  [8] &quot;tree&quot;    &quot;and&quot;     &quot;yet&quot;     &quot;it&quot;      &quot;was&quot;     &quot;not&quot;     &quot;happy&quot;  
+## [15] &quot;it&quot;     
+## 
+## [[3]]
+##  [1] &quot;wished&quot;     &quot;so&quot;         &quot;much&quot;       &quot;to&quot;         &quot;be&quot;        
+##  [6] &quot;tall&quot;       &quot;like&quot;       &quot;its&quot;        &quot;companions&quot; &quot;the&quot;       
+## [11] &quot;pines&quot;      &quot;and&quot;        &quot;firs&quot;       &quot;which&quot;      &quot;grew&quot;</code></pre>
+<p>You can also tokenize into characters as well.</p>
+<pre class="r"><code>tokenize_characters(the_fir_tree[1:3])</code></pre>
+<pre><code>## [[1]]
+##  [1] &quot;f&quot; &quot;a&quot; &quot;r&quot; &quot;d&quot; &quot;o&quot; &quot;w&quot; &quot;n&quot; &quot;i&quot; &quot;n&quot; &quot;t&quot; &quot;h&quot; &quot;e&quot; &quot;f&quot; &quot;o&quot; &quot;r&quot; &quot;e&quot; &quot;s&quot; &quot;t&quot; &quot;w&quot;
+## [20] &quot;h&quot; &quot;e&quot; &quot;r&quot; &quot;e&quot; &quot;t&quot; &quot;h&quot; &quot;e&quot; &quot;w&quot; &quot;a&quot; &quot;r&quot; &quot;m&quot; &quot;s&quot; &quot;u&quot; &quot;n&quot; &quot;a&quot; &quot;n&quot; &quot;d&quot; &quot;t&quot; &quot;h&quot;
+## [39] &quot;e&quot; &quot;f&quot; &quot;r&quot; &quot;e&quot; &quot;s&quot; &quot;h&quot; &quot;a&quot; &quot;i&quot; &quot;r&quot; &quot;m&quot; &quot;a&quot; &quot;d&quot; &quot;e&quot; &quot;a&quot; &quot;s&quot; &quot;w&quot; &quot;e&quot; &quot;e&quot; &quot;t&quot;
+## 
+## [[2]]
+##  [1] &quot;r&quot; &quot;e&quot; &quot;s&quot; &quot;t&quot; &quot;i&quot; &quot;n&quot; &quot;g&quot; &quot;p&quot; &quot;l&quot; &quot;a&quot; &quot;c&quot; &quot;e&quot; &quot;g&quot; &quot;r&quot; &quot;e&quot; &quot;w&quot; &quot;a&quot; &quot;p&quot; &quot;r&quot;
+## [20] &quot;e&quot; &quot;t&quot; &quot;t&quot; &quot;y&quot; &quot;l&quot; &quot;i&quot; &quot;t&quot; &quot;t&quot; &quot;l&quot; &quot;e&quot; &quot;f&quot; &quot;i&quot; &quot;r&quot; &quot;t&quot; &quot;r&quot; &quot;e&quot; &quot;e&quot; &quot;a&quot; &quot;n&quot;
+## [39] &quot;d&quot; &quot;y&quot; &quot;e&quot; &quot;t&quot; &quot;i&quot; &quot;t&quot; &quot;w&quot; &quot;a&quot; &quot;s&quot; &quot;n&quot; &quot;o&quot; &quot;t&quot; &quot;h&quot; &quot;a&quot; &quot;p&quot; &quot;p&quot; &quot;y&quot; &quot;i&quot; &quot;t&quot;
+## 
+## [[3]]
+##  [1] &quot;w&quot; &quot;i&quot; &quot;s&quot; &quot;h&quot; &quot;e&quot; &quot;d&quot; &quot;s&quot; &quot;o&quot; &quot;m&quot; &quot;u&quot; &quot;c&quot; &quot;h&quot; &quot;t&quot; &quot;o&quot; &quot;b&quot; &quot;e&quot; &quot;t&quot; &quot;a&quot; &quot;l&quot;
+## [20] &quot;l&quot; &quot;l&quot; &quot;i&quot; &quot;k&quot; &quot;e&quot; &quot;i&quot; &quot;t&quot; &quot;s&quot; &quot;c&quot; &quot;o&quot; &quot;m&quot; &quot;p&quot; &quot;a&quot; &quot;n&quot; &quot;i&quot; &quot;o&quot; &quot;n&quot; &quot;s&quot; &quot;t&quot;
+## [39] &quot;h&quot; &quot;e&quot; &quot;p&quot; &quot;i&quot; &quot;n&quot; &quot;e&quot; &quot;s&quot; &quot;a&quot; &quot;n&quot; &quot;d&quot; &quot;f&quot; &quot;i&quot; &quot;r&quot; &quot;s&quot; &quot;w&quot; &quot;h&quot; &quot;i&quot; &quot;c&quot; &quot;h&quot;
+## [58] &quot;g&quot; &quot;r&quot; &quot;e&quot; &quot;w&quot;</code></pre>
+</div>
+<div id="removing-stop-words" class="section level2">
+<h2>Removing Stop Words</h2>
+<p>Another important process in text mining/text analysis is to getting rid of stop words, which are usually does not carry much information into your analysis. <code>stopwords</code> package provides various lists of stop words.</p>
+<p>In the below code block, we again pull a story and then using <code>unnest_token</code> function get the unique words from the text. As you can see that there are 1287 unique words.</p>
+<pre class="r"><code>tale &lt;- hca_fairytales() %&gt;%
+  filter(
+    book == &quot;What one can invent&quot;,
+    language == &quot;English&quot;
+  )
+
+tale_word_list &lt;- tale %&gt;%
+  unnest_tokens(word, text)
+
+nrow(tale_word_list)</code></pre>
+<pre><code>## [1] 1287</code></pre>
+<p>One of the stop words lists provided by <code>stopwords</code>package is the <code>snowball</code> list, configured via setting the <code>source</code> argument. Using that list we can easily remove the stop words via <code>dplyr</code>’s <code>filter</code> operation.</p>
+<p>As you can see we ended up with 577 words without the stop words.</p>
+<pre class="r"><code>nosw_tale_word_list = tale_word_list %&gt;%
+  filter(!(tale_word_list$word %in% stopwords(source = &quot;snowball&quot;)))
+nrow(nosw_tale_word_list)</code></pre>
+<pre><code>## [1] 577</code></pre>
+<pre class="r"><code>nosw_tale_word_list</code></pre>
+<pre><code>## # A tibble: 577 x 3
+##    book                language word    
+##    &lt;chr&gt;               &lt;chr&gt;    &lt;chr&gt;   
+##  1 What one can invent English  young   
+##  2 What one can invent English  man     
+##  3 What one can invent English  studying
+##  4 What one can invent English  poet    
+##  5 What one can invent English  wanted  
+##  6 What one can invent English  become  
+##  7 What one can invent English  one     
+##  8 What one can invent English  easter  
+##  9 What one can invent English  marry   
+## 10 What one can invent English  live    
+## # … with 567 more rows</code></pre>
+</div>
+<div id="stemming" class="section level2">
+<h2>Stemming</h2>
+<p>The idea of stemming is to acquire the base word (stem) instead of dealing with different versions of the same word. Using a package called <code>SnowballC</code> that implements one of the widely used stemming algorithms, you can easily do stemming.</p>
+<p>In the below code, we apply stemming thanks the <code>wordStem</code> function that comes from the <code>SnowballC</code> package.</p>
+<pre class="r"><code>stem_counts = nosw_tale_word_list %&gt;%
+  mutate(stem = wordStem(word)) %&gt;%
+  count(stem, sort = TRUE)
+stem_counts</code></pre>
+<pre><code>## # A tibble: 316 x 2
+##    stem       n
+##    &lt;chr&gt;  &lt;int&gt;
+##  1 said      14
+##  2 on        11
+##  3 potato    11
+##  4 now       10
+##  5 woman     10
+##  6 can        9
+##  7 man        9
+##  8 time       8
+##  9 wise       8
+## 10 invent     7
+## # … with 306 more rows</code></pre>
+</div>
+<div id="part-of-speech-tagging" class="section level2">
+<h2>Part of Speech Tagging</h2>
+<p>Part of Speech (POS) tagging is the process of categorizing the words into their grammatical properties such noun, verb, article, adjective, preposition, pronoun, adverb, conjunction, and interjection.</p>
+<p>One of the R packages that you can use for POS tagging is <code>RDRPOSTagger</code> that that supports 45 languages including but not limited to English, German, French, Italian, and Turkish.</p>
+<p>In the below code, we apply POS tagging on the words of a sample text about Rubik’s cube.</p>
+<pre class="r"><code>text &lt;- &quot;Rubik&#39;s Cube is a 3-D combination puzzle invented in 1974 by Hungarian sculptor and professor of architecture Ernő Rubik. Originally called the Magic Cube, the puzzle was licensed by Rubik to be sold by Ideal Toy Corp. in 1980 via businessman Tibor Laczi and Seven Towns founder Tom Kremer, and won the German Game of the Year special award for Best Puzzle that year. As of January 2009, 350 million cubes had been sold worldwide making it the world&#39;s top-selling puzzle game. It is widely considered to be the world&#39;s best-selling toy.&quot;
+
+sentences &lt;- tokenize_sentences(text, simplify = TRUE)
+unipostagger &lt;- rdr_model(language = &quot;English&quot;, annotation = &quot;UniversalPOS&quot;)
+unipostags &lt;- rdr_pos(unipostagger, sentences)
+head(unipostags)</code></pre>
+<pre><code>##   doc_id token_id   token   pos
+## 1     d1        1 Rubik&#39;s  NOUN
+## 2     d1        2    Cube  NOUN
+## 3     d1        3      is   AUX
+## 4     d1        4       a   DET
+## 5     d1        5       3   NUM
+## 6     d1        6       - PUNCT</code></pre>
+</div>
+<div id="word-cloud" class="section level2">
+<h2>Word Cloud</h2>
+<p>You can also visualize importance/frequency of the words via word clouds. Using the <code>wordcloud</code> package we depicted the most used words from the tale of <code>What one can invent</code>.</p>
+<pre class="r"><code>set.seed(1234)
+wordcloud(words = stem_counts$stem, freq = stem_counts$n, min.freq = 3,
+          max.words=200, random.order=FALSE, rot.per=0.25, 
+          colors=brewer.pal(8, &quot;Dark2&quot;))</code></pre>
+<p><img src="text-mining_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="latent-dirichlet-allocation" class="section level2">
+<h2>Latent Dirichlet Allocation</h2>
+<p>Latent Dirichlet Allocation (LDA) is one of the most powerful topic modelling algorithms invented back in 2003. It treats each document as a mixture of topics and each topics as a mixture of words. Using the <code>topicmodels</code> package, we demontrate an example of LDA on built in <code>AssociatePress</code> dataset, which also comes with the same package.</p>
+<p>In the below code, based on the <code>AssociatedPress</code> data we run the LDA algorithm considering 3 topics. One of the crucial things to consider when applying LDA is to decide on the number of topics. For the sake of example, we set it to 3.</p>
+<pre class="r"><code>set.seed(1234)
+data(AssociatedPress)
+ap_lda &lt;- LDA(AssociatedPress, k = 3)
+ap_lda</code></pre>
+<pre><code>## A LDA_VEM topic model with 3 topics.</code></pre>
+<p>Below code block presents the per-topics probabilities (beta-β) of each word along with the associated topics number.</p>
+<pre class="r"><code>ap_topics &lt;- tidy(ap_lda, matrix = &quot;beta&quot;)
+ap_topics</code></pre>
+<pre><code>## # A tibble: 31,419 x 3
+##    topic term           beta
+##    &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
+##  1     1 aaron      1.37e- 5
+##  2     2 aaron      4.94e- 5
+##  3     3 aaron      1.04e- 7
+##  4     1 abandon    5.54e- 5
+##  5     2 abandon    8.72e-17
+##  6     3 abandon    5.10e- 5
+##  7     1 abandoned  5.20e- 5
+##  8     2 abandoned  1.83e- 4
+##  9     3 abandoned  2.43e- 5
+## 10     1 abandoning 2.78e- 5
+## # … with 31,409 more rows</code></pre>
+<p>Lastly, using the <code>ggplot2</code> package we plot the top 10 most used words per topic.</p>
+<pre class="r"><code>ap_top_terms &lt;- ap_topics %&gt;%
+  group_by(topic) %&gt;%
+  top_n(10, beta) %&gt;%
+  ungroup() %&gt;%
+  arrange(topic, -beta)
+
+ap_top_terms %&gt;%
+  mutate(term = reorder_within(term, beta, topic)) %&gt;%
+  ggplot(aes(term, beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = &quot;free&quot;) +
+  coord_flip() +
+  scale_x_reordered()</code></pre>
+<p><img src="text-mining_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div id="resources" class="section level3">
+<h3>Resources</h3>
+<ul>
+<li>Supervised Machine Learning for Text Analysis in R: <a href="https://smltar.com/" class="uri">https://smltar.com/</a></li>
+<li>Text Analysis in R: <a href="https://m-clark.github.io/text-analysis-with-R/" class="uri">https://m-clark.github.io/text-analysis-with-R/</a></li>
+<li>Part of Speech tagging with R: <a href="https://smart-statistics.com/part-speech-tagging-r/" class="uri">https://smart-statistics.com/part-speech-tagging-r/</a></li>
+<li>Text mining and word cloud fundamentals: <a href="http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know" class="uri">http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know</a></li>
+<li>R and OpenNLP for Natural Language Processing NLP
+<ul>
+<li>Part 1: <a href="https://www.youtube.com/watch?v=RggCAXBe6BA" class="uri">https://www.youtube.com/watch?v=RggCAXBe6BA</a></li>
+<li>Part 2: <a href="https://www.youtube.com/watch?v=0lpQludiI-0" class="uri">https://www.youtube.com/watch?v=0lpQludiI-0</a></li>
+</ul></li>
+<li>Beginner’s Guide to LDA Topic Modelling with R: <a href="https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25" class="uri">https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25</a></li>
+<li>Topic modelling: <a href="https://www.tidytextmining.com/topicmodeling.html" class="uri">https://www.tidytextmining.com/topicmodeling.html</a></li>
+</ul>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

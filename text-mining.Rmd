@@ -165,6 +165,33 @@ ap_top_terms %>%
   scale_x_reordered()
 ```
 
+Perplexity is a statistical measure of how well a probability model predicts a sample. You can calculate the perplexity of a model with the following code. 
+
+```{r}
+perplexity(ap_lda)
+```
+
+Let's create another model with k = 5 and compare it with our original model with respect to the models' perplexity scores.
+
+```{r}
+ap_lda_5 = LDA(AssociatedPress, k = 5)
+perplexity(ap_lda_5)
+```
+
+For perplexity scores the lower the better. So, we can say that setting the number of topics to 5 is better than the setting it to 3.
+
+In order to predict a topic of a given document, you can use the `posterior` method. 
+
+```{r}
+prediction = posterior(ap_lda_5, AssociatedPress[1, ])
+prediction$topics
+```
+
+```{r}
+apply(prediction$topics, 1, which.max)
+```
+
+Given the first document from AssociatedPress, we can see the normalized likelihoods above and the 3rd topic has the maximum likelihood.
 
 
 ### Resources
