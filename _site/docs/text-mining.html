@@ -508,16 +508,16 @@ ap_topics</code></pre>
 <pre><code>## # A tibble: 31,419 x 3
 ##    topic term           beta
 ##    &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
-##  1     1 aaron      5.30e- 6
-##  2     2 aaron      5.08e- 5
-##  3     3 aaron      3.16e- 6
-##  4     1 abandon    5.75e- 5
-##  5     2 abandon    1.10e-10
-##  6     3 abandon    5.67e- 5
-##  7     1 abandoned  5.59e- 5
-##  8     2 abandoned  1.56e- 4
-##  9     3 abandoned  3.91e- 5
-## 10     1 abandoning 3.77e- 5
+##  1     1 aaron      2.05e- 6
+##  2     2 aaron      4.53e-12
+##  3     3 aaron      5.55e- 5
+##  4     1 abandon    3.95e- 5
+##  5     2 abandon    4.94e- 5
+##  6     3 abandon    2.02e- 5
+##  7     1 abandoned  9.42e- 5
+##  8     2 abandoned  1.47e- 5
+##  9     3 abandoned  1.41e- 4
+## 10     1 abandoning 8.77e- 6
 ## # … with 31,409 more rows</code></pre>
 <p>Lastly, using the <code>ggplot2</code> package we plot the top 10 most used words per topic.</p>
 <pre class="r"><code>ap_top_terms = ap_topics %&gt;%
@@ -534,6 +534,22 @@ ap_top_terms %&gt;%
   coord_flip() +
   scale_x_reordered()</code></pre>
 <p><img src="text-mining_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Perplexity is a statistical measure of how well a probability model predicts a sample. You can calculate the perplexity of a model with the following code.</p>
+<pre class="r"><code>perplexity(ap_lda)</code></pre>
+<pre><code>## [1] 3302.95</code></pre>
+<p>Let’s create another model with k = 5 and compare it with our original model with respect to the models’ perplexity scores.</p>
+<pre class="r"><code>ap_lda_5 = LDA(AssociatedPress, k = 5)
+perplexity(ap_lda_5)</code></pre>
+<pre><code>## [1] 2938.543</code></pre>
+<p>For perplexity scores the lower the better. So, we can say that setting the number of topics to 5 is better than the setting it to 3.</p>
+<p>In order to predict a topic of a given document, you can use the <code>posterior</code> method.</p>
+<pre class="r"><code>prediction = posterior(ap_lda_5, AssociatedPress[1, ])
+prediction$topics</code></pre>
+<pre><code>##              1            2            3         4            5
+## [1,] 0.2706845 0.0003167714 0.0003167712 0.7283652 0.0003167747</code></pre>
+<pre class="r"><code>apply(prediction$topics, 1, which.max)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<p>Given the first document from AssociatedPress, we can see the normalized likelihoods above and the 3rd topic has the maximum likelihood.</p>
 <div id="resources" class="section level3">
 <h3>Resources</h3>
 <ul>

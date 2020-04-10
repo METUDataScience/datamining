@@ -165,7 +165,9 @@ ap_top_terms %>%
   scale_x_reordered()
 ```
 
-Perplexity is a statistical measure of how well a probability model predicts a sample. You can calculate the perplexity of a model with the following code. 
+Now, let's look at how you can evaluate your LDA model. Perplexity is one of the measures that you can use to evaluate your model, which a statistical measure of how well a probability model predicts a sample. 
+
+You can calculate the perplexity of a model with the following code. 
 
 ```{r}
 perplexity(ap_lda)
@@ -178,9 +180,9 @@ ap_lda_5 = LDA(AssociatedPress, k = 5)
 perplexity(ap_lda_5)
 ```
 
-For perplexity scores the lower the better. So, we can say that setting the number of topics to 5 is better than the setting it to 3.
+When you are trying to understand the perplexity score, the lower, the better, so we can say that setting the number of topics to 5 is better than setting it to 3.
 
-In order to predict a topic of a given document, you can use the `posterior` method. 
+In order to predict the topic of a given document, you can use the `posterior` method. 
 
 ```{r}
 prediction = posterior(ap_lda_5, AssociatedPress[1, ])
