@@ -322,36 +322,16 @@ $(document).ready(function () {
 <p>The objective of this document is to give a brief introduction to text mining and some related concepts such as part of speech tagging, tokenization, and stemming.</p>
 <div id="install-required-packages" class="section level2">
 <h2>Install required packages</h2>
-<pre class="r"><code>if(!require(hcandersenr)) {install.packages(&quot;hcandersenr&quot;)} # Fairy tales and stories of H.C. Andersen</code></pre>
-<pre><code>## Loading required package: hcandersenr</code></pre>
-<pre class="r"><code>if(!require(tidytext)) {install.packages(&quot;tidytext&quot;)}</code></pre>
-<pre><code>## Loading required package: tidytext</code></pre>
-<pre class="r"><code>if(!require(dplyr)) {install.packages(&quot;dplyr&quot;)}</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>if(!require(ggplot2)) {install.packages(&quot;ggplot2&quot;)}</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre class="r"><code>if(!require(tokenizers)) {install.packages(&quot;tokenizers&quot;)}</code></pre>
-<pre><code>## Loading required package: tokenizers</code></pre>
-<pre class="r"><code>if(!require(SnowballC)) {install.packages(&quot;SnowballC&quot;)}</code></pre>
-<pre><code>## Loading required package: SnowballC</code></pre>
-<pre class="r"><code>if(!require(stopwords)) {install.packages(&quot;stopwords&quot;)}</code></pre>
-<pre><code>## Loading required package: stopwords</code></pre>
-<pre class="r"><code>if(!require(wordcloud)) {install.packages(&quot;wordcloud&quot;)} # word-cloud generator </code></pre>
-<pre><code>## Loading required package: wordcloud</code></pre>
-<pre><code>## Loading required package: RColorBrewer</code></pre>
-<pre class="r"><code>if(!require(RDRPOSTagger)) {remotes::install_github(&quot;bnosac/RDRPOSTagger&quot;)} </code></pre>
-<pre><code>## Loading required package: RDRPOSTagger</code></pre>
-<pre><code>## Loading required package: rJava</code></pre>
-<pre class="r"><code>if(!require(topicmodels)) {install.packages(&quot;topicmodels&quot;)}</code></pre>
-<pre><code>## Loading required package: topicmodels</code></pre>
+<pre class="r"><code>if(!require(hcandersenr)) {install.packages(&quot;hcandersenr&quot;)} # Fairy tales and stories of H.C. Andersen
+if(!require(tidytext)) {install.packages(&quot;tidytext&quot;)}
+if(!require(dplyr)) {install.packages(&quot;dplyr&quot;)}
+if(!require(ggplot2)) {install.packages(&quot;ggplot2&quot;)}
+if(!require(tokenizers)) {install.packages(&quot;tokenizers&quot;)}
+if(!require(SnowballC)) {install.packages(&quot;SnowballC&quot;)}
+if(!require(stopwords)) {install.packages(&quot;stopwords&quot;)}
+if(!require(wordcloud)) {install.packages(&quot;wordcloud&quot;)} # word-cloud generator 
+if(!require(RDRPOSTagger)) {remotes::install_github(&quot;bnosac/RDRPOSTagger&quot;)} 
+if(!require(topicmodels)) {install.packages(&quot;topicmodels&quot;)}</code></pre>
 </div>
 <div id="tokenization" class="section level2">
 <h2>Tokenization</h2>
@@ -508,16 +488,16 @@ ap_topics</code></pre>
 <pre><code>## # A tibble: 31,419 x 3
 ##    topic term           beta
 ##    &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
-##  1     1 aaron      5.04e- 8
-##  2     2 aaron      4.50e- 5
-##  3     3 aaron      2.00e- 5
-##  4     1 abandon    3.66e- 5
-##  5     2 abandon    6.88e- 5
-##  6     3 abandon    1.18e- 9
-##  7     1 abandoned  4.96e- 5
-##  8     2 abandoned  3.90e- 5
-##  9     3 abandoned  1.75e- 4
-## 10     1 abandoning 2.46e-24
+##  1     1 aaron      2.82e- 8
+##  2     2 aaron      6.07e- 5
+##  3     3 aaron      4.86e- 6
+##  4     1 abandon    5.44e- 5
+##  5     2 abandon    2.88e- 5
+##  6     3 abandon    2.54e- 5
+##  7     1 abandoned  1.72e- 5
+##  8     2 abandoned  1.54e- 4
+##  9     3 abandoned  8.78e- 5
+## 10     1 abandoning 9.20e-20
 ## # … with 31,409 more rows</code></pre>
 <p>Lastly, using the <code>ggplot2</code> package we plot the top 10 most used words per topic.</p>
 <pre class="r"><code>ap_top_terms = ap_topics %&gt;%
@@ -537,17 +517,17 @@ ap_top_terms %&gt;%
 <p>Now, let’s look at how you can evaluate your LDA model. Perplexity is one of the measures that you can use to evaluate your model, which a statistical measure of how well a probability model predicts a sample.</p>
 <p>You can calculate the perplexity of a model with the following code.</p>
 <pre class="r"><code>perplexity(ap_lda)</code></pre>
-<pre><code>## [1] 3318.244</code></pre>
+<pre><code>## [1] 3303.775</code></pre>
 <p>Let’s create another model with k = 5 and compare it with our original model with respect to the models’ perplexity scores.</p>
 <pre class="r"><code>ap_lda_5 = LDA(AssociatedPress, k = 5)
 perplexity(ap_lda_5)</code></pre>
-<pre><code>## [1] 2897.033</code></pre>
+<pre><code>## [1] 2889.594</code></pre>
 <p>When you are trying to understand the perplexity score, the lower, the better, so we can say that setting the number of topics to 5 is better than setting it to 3.</p>
 <p>In order to predict the topic of a given document, you can use the <code>posterior</code> method.</p>
 <pre class="r"><code>prediction = posterior(ap_lda_5, AssociatedPress[1, ])
 prediction$topics</code></pre>
-<pre><code>##                 1         2         3            4        5
-## [1,] 0.0002979361 0.5616445 0.2902726 0.0002979366 0.147487</code></pre>
+<pre><code>##                 1         2            3            4         5
+## [1,] 0.0003048943 0.6921467 0.0003048961 0.0003048998 0.3069386</code></pre>
 <pre class="r"><code>apply(prediction$topics, 1, which.max)</code></pre>
 <pre><code>## [1] 2</code></pre>
 <p>Given the first document from AssociatedPress, we can see the normalized likelihoods above and the 3rd topic has the maximum likelihood.</p>
